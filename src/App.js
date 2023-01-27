@@ -6,7 +6,6 @@ import {
   ScaleControl,
   GeolocateControl,
   Marker,
-  useControl,
 } from "react-map-gl";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
@@ -17,25 +16,19 @@ import r from "./Spot_Red.png";
 import y from "./Spot_Yellow.png";
 import ControlPanel from "./ControlPanel";
 
-function LayerModeControl(props) {
-  useControl(() => {}, {
-    position: props.position,
-  });
-
-  return null;
-}
-
 function App() {
   const [locations, setLocations] = React.useState([]);
   const [API_KEY] = React.useState("eYboNuK8ZtXZYc42zMuK");
 
-  const INITIAL_VIEW_STATE = {
-    latitude: 25.31972535,
-    longitude: 51.52509915,
-    zoom: 13,
-    pitch: 0,
-    bearing: 0,
-  };
+  const [mode, setMode] = React.useState("dark");
+
+  // const INITIAL_VIEW_STATE = {
+  //   latitude: 25.31972535,
+  //   longitude: 51.52509915,
+  //   zoom: 20,
+  //   pitch: 0,
+  //   bearing: 0,
+  // };
 
   React.useEffect(() => {
     getLocations().then((res) => {
@@ -93,6 +86,7 @@ function App() {
                 ? y
                 : g
             }
+            alt=""
           />
         </Marker>
       )),
@@ -112,9 +106,10 @@ function App() {
         initialViewState={{
           latitude: 25.31972535,
           longitude: 51.52509915,
+          zoom: 13,
         }}
         style={{ width: "100vw", height: "100vh" }}
-        mapStyle={`https://api.maptiler.com/maps/streets-v2-dark/style.json?key=${API_KEY}`}
+        mapStyle={`https://api.maptiler.com/maps/streets-v2-${mode}/style.json?key=${API_KEY}`}
       >
         <GeolocateControl position="top-right" />
         <FullscreenControl position="top-right" />
@@ -123,7 +118,10 @@ function App() {
 
         {pins}
       </Map>
-      <ControlPanel />
+      <ControlPanel
+        mode={mode}
+        onToggle={() => setMode(mode === "dark" ? "light" : "dark")}
+      />
     </React.Fragment>
   );
 }

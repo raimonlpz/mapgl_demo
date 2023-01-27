@@ -6,14 +6,24 @@ import {
   ScaleControl,
   GeolocateControl,
   Marker,
+  useControl,
 } from "react-map-gl";
 import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { getLocations } from "./service/api";
 
-import g from "./green.png";
-import r from "./red.png";
-import y from "./yellow.png";
+import g from "./Spot_Green.png";
+import r from "./Spot_Red.png";
+import y from "./Spot_Yellow.png";
+import ControlPanel from "./ControlPanel";
+
+function LayerModeControl(props) {
+  useControl(() => {}, {
+    position: props.position,
+  });
+
+  return null;
+}
 
 function App() {
   const [locations, setLocations] = React.useState([]);
@@ -96,23 +106,25 @@ function App() {
     //     INITIAL_VIEW_STATE
     //   }
     // >
-    <Map
-      mapLib={maplibregl}
-      initialViewState={{
-        latitude: 25.31972535,
-        longitude: 51.52509915,
-      }}
-      style={{ width: "100vw", height: "100vh" }}
-      mapStyle={`https://api.maptiler.com/maps/streets-v2-dark/style.json?key=${API_KEY}`}
-    >
-      <GeolocateControl position="top-right" />
-      <FullscreenControl position="top-right" />
-      <NavigationControl position="top-right" />
-      <ScaleControl />
+    <React.Fragment>
+      <Map
+        mapLib={maplibregl}
+        initialViewState={{
+          latitude: 25.31972535,
+          longitude: 51.52509915,
+        }}
+        style={{ width: "100vw", height: "100vh" }}
+        mapStyle={`https://api.maptiler.com/maps/streets-v2-dark/style.json?key=${API_KEY}`}
+      >
+        <GeolocateControl position="top-right" />
+        <FullscreenControl position="top-right" />
+        <NavigationControl position="top-right" />
+        <ScaleControl />
 
-      {pins}
-    </Map>
-    // </DeckGL>
+        {pins}
+      </Map>
+      <ControlPanel />
+    </React.Fragment>
   );
 }
 
